@@ -1,0 +1,21 @@
+<html>
+<!--<img src="https://d3hqjqdr0jqjzf.cloudfront.net/test-image.png" crossorigin="use-credentials"/>-->
+<!--<img src="https://ufe-test-bucket.s3-us-west-2.amazonaws.com/test-image.png"/>-->
+<script src="https://d3hqjqdr0jqjzf.cloudfront.net/bucket.js" crossorigin="use-credentials"></script>
+<!--<script src="https://ufe-test-bucket.s3-us-west-2.amazonaws.com/bucket.js" crossorigin="use-credentials"></script>-->
+<!--<button onclick="test()">Test</button>-->
+
+<script>
+  function test() {
+    const http = new XMLHttpRequest()
+    http.withCredentials = true
+    const url = 'https://d3hqjqdr0jqjzf.cloudfront.net/test-image.png'
+    // const url = 'https://ufe-test-bucket.s3-us-west-2.amazonaws.com/test-image.png'
+    http.open('GET', url)
+    http.onload = () => {
+      console.log(http)
+    }
+    http.send()
+  }
+</script>
+</html>
