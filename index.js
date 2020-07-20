@@ -2,13 +2,15 @@ const express = require('express')
 const app = express()
 const port = 3000
 const path = require('path')
-const cors = require('cors')
+// const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const cf = require('aws-cloudfront-sign')
-const options = {keypairId: 'APKAIAJ7G3RDYUHGZNYQ', privateKeyPath: './private.pem'}
-const cdnDomain = 'https://cloudfront.net'
+const options = {keypairId: 'KEYPAIR_ID', privateKeyPath: './private.pem'}
+const cdnDomain = 'https://d3hqjqdr0jqjzf.cloudfront.net'
 
 app.use(express.static('public'))
-app.use(cors())
+// app.use(cors())
+app.use(cookieParser())
 
 
 app.get('/', (req, res) => {
@@ -17,7 +19,9 @@ app.get('/', (req, res) => {
 
 app.get('/auth', (req, res) => {
   const signed = cf.getSignedCookies(cdnDomain, options)
-  res.cookie('authorized', signed, {maxAge: 24 * 60 * 60, secure: true, sameSite: 'None', domain: cdnDomain})
+  res.cookie('CloudFront-Expires', 1595372546, {secure: true, sameSite: 'None', httpOnly: true, domain: cdnDomain, path: '/'})
+  res.cookie('CloudFront-Signature', signed, {secure: true, sameSite: 'None', httpOnly: true, domain: cdnDomain, path: '/'})
+  res.cookie('CloudFront-Key-Pair-Id', options.keypairId, {secure: true, sameSite: 'None', httpOnly: true, domain: cdnDomain, path: '/'})
   res.sendFile(path.join(__dirname, 'secure.html'))
 })
 
