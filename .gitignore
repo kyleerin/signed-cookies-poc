@@ -1,3 +1,6 @@
+# keys
+private.pem
+public.pem
 # webstorm
 .idea
 # Logs
