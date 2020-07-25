@@ -1,0 +1,12 @@
+{
+  "Statement":[
+    {
+      "Resource":"https://d1eztk77tajaox.cloudfront.net/bucket.js",
+      "Condition":{
+        "DateLessThan":{
+          "AWS:EpochTime": 1598306437
+        }
+      }
+    }
+  ]
+}
