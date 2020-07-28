@@ -12,12 +12,32 @@ if (res.code !== 0) {
   console.log('error signing policy', res.error)
   exit(1) // an error is shown by aws cli in stderr
 }
+const signature = res.stdout.replace(/\n/g, '')
+// hashed policy
+cmd = `cat policy.json | tr -d "\\n" | tr -d " \\t\\n\\r" | openssl base64 | tr -- '+=/' '-_~'`
+res = exec(cmd, {silent: true})
+if (res.code !== 0) {
+  console.log('error hashing policy', res.error)
+  exit(1) // an error is shown by aws cli in stderr
+}
+const hashedPolicy = res.stdout.replace(/\n/g, '')
 
-cmd = `curl -b 'CloudFront-Signature=${res.stdout.replace(/\n/g, '')}; CloudFront-Expires=${expire}; CloudFront-Key-Pair-Id=${keypair}; Secure; HttpOnly' ${cdnDomain}/bucket.js`
+// access first js file
+cmd = `curl -b 'CloudFront-Signature=${signature}; Secure; HttpOnly; CloudFront-Expires=${expire}; Secure; HttpOnly; CloudFront-Key-Pair-Id=${keypair}; Secure; HttpOnly; CloudFront-Policy=${hashedPolicy}; Secure; HttpOnly;' ${cdnDomain}/testdir/bucket.js`
 res = exec(cmd, {silent: true})
 if (res.code !== 0) {
   console.log('error making request', res.error)
   exit(1)
 }
 
-console.log(res.stdout)
+console.log('SUCCESS', res.stdout)
+
+// access second js file
+cmd = `curl -b 'CloudFront-Signature=${signature}; Secure; HttpOnly; CloudFront-Expires=${expire}; Secure; HttpOnly; CloudFront-Key-Pair-Id=${keypair}; Secure; HttpOnly; CloudFront-Policy=${hashedPolicy}; Secure; HttpOnly;' ${cdnDomain}/testdir/bucket2.js`
+res = exec(cmd, {silent: true})
+if (res.code !== 0) {
+  console.log('error making request', res.error)
+  exit(1)
+}
+
+console.log('SUCCESS', res.stdout)

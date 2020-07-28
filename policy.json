@@ -1,7 +1,7 @@
 {
   "Statement":[
     {
-      "Resource":"https://d1eztk77tajaox.cloudfront.net/bucket.js",
+      "Resource":"https://d1eztk77tajaox.cloudfront.net/testdir/*",
       "Condition":{
         "DateLessThan":{
           "AWS:EpochTime": 1598306437
