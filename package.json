@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/kyle-infoblox/signed-cookies-poc#readme",
   "dependencies": {
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.5"
   }
 }
